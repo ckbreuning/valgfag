@@ -126,6 +126,7 @@ class Search {
   keyPressDispatcher(event) {
     // Hvis man trykker på 's' eller 'S', og man ikke allerede er ved at skrive i et felt, så hopper vi direkte til søgefeltet
     if ((event.key === 's' || event.key === 'S') && !this.isTypingSomewhere()) {
+      event.preventDefault(); // Gør så man ikke skriver 's' i feltet med det samme man trykker "s".
       this.searchField.focus(); // Hop direkte til søgefeltet
     }
 
