@@ -1,32 +1,30 @@
 <?php
 
-// Load fonts, Font Awesome, and stylesheet
+require get_theme_file_path('/search-route.php');
+
 function cooking_files() {
-  wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Rufina:wght@400;700&display=swap');
+  wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Rufina:wght@400;700&display=swap');
 
   wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css');
 
-  wp_enqueue_style('cooking_main_styles', get_stylesheet_uri(), array(), filemtime(get_stylesheet_directory() . '/style.css'));
+  wp_enqueue_style('cooking_main_styles', get_stylesheet_uri());
 
-  if (is_page('create-recipe')) {
-    wp_enqueue_script('cooking-recipe-form', get_theme_file_uri('/js/create-recipe.js'), array(), '1.0', true);
-  }
-
+  // Hvis vi er inde på en enkelt opskrift, indlæser vi et script til den
   if (is_singular('recipe')) {
-    wp_enqueue_script('cooking-single-recipe', get_theme_file_uri('/js/single-recipe.js'), array(), '1.0', true);
+    wp_enqueue_script('cooking-single-recipe', get_theme_file_uri('/js/single-recipe.js'));
   }
 
-  // Live search
-  wp_enqueue_script('cooking-live-search', get_theme_file_uri('/js/live-search.js'), array(), '1.0', true);
+  // Indlæs vores JavaScript til Live-search
+  wp_enqueue_script('cooking-live-search', get_theme_file_uri('/js/live-search.js'));
 
+  // Giv vores live-search script en besked om, hvilket URL den skal sende requests til
   wp_localize_script('cooking-live-search', 'cookingSearch', array(
-    'restUrl' => esc_url_raw(rest_url('wp/v2/recipe'))
+    'root_url' => get_site_url()
   ));
 }
+
 add_action('wp_enqueue_scripts', 'cooking_files');
 
-
-// Theme features
 function cooking_features() {
   register_nav_menu('headerMenuLocation', 'Header Menu');
   register_nav_menu('footerMenuLocation', 'Footer Menu');
@@ -50,56 +48,35 @@ function cooking_adjust_queries($query) {
 }
 add_action('pre_get_posts', 'cooking_adjust_queries');
 
-function cooking_user_can_manage_recipes($user = null) {
-
-  if (!$user) {
-    if (!is_user_logged_in()) {
-      return false;
-    }
-    $user = wp_get_current_user();
-  }
-
-  $allowed_roles = array('amateur_cook', 'professional_chef', 'administrator');
-
-  return (bool) array_intersect($allowed_roles, $user->roles);
-}
-
-function cooking_repeater_to_list($rows) {
-
-  if (empty($rows)) {
-    return array();
-  }
-
-  if (is_string($rows)) {
-    return array_values(array_filter(array_map('trim', explode("\n", $rows))));
-  }
-
+// En funktion, der tager en tekst med flere linjer og laver den om til en liste
+function cooking_repeater_to_list($rows) {  
+  
+  // Hvis feltet er helt tomt, stopper vi og returnerer en tom liste
+  if (empty($rows)) {    
+    return array();  
+  }  
+  
+  // https://stackoverflow.com/questions/5047533/php-equivalent-to-javascripts-string-split-method + https://stackoverflow.com/questions/7058168/explode-textarea-php-at-new-lines fundet via google
+  $lines = explode("\n", $rows); 
+  
+  // Gør en ny, tom liste klar.
   $list = array();
 
-  foreach ($rows as $row) {
-    $value = is_array($row) ? reset($row) : $row;
+  // Gå igennem alle linjerne fra vores tekst.
+  foreach ($lines as $line) {
+    
+    $line = trim($line); 
 
-    if ($value !== '' && $value !== false && $value !== null) {
-      $list[] = $value;
+    // Tjek om linjen indeholder noget tekst.
+    if ($line !== '') {
+      
+      // Hvis linjen ikke er tom, putter vi den over i vores nye array.
+      $list[] = $line; 
     }
   }
 
+  // Send den færdige liste tilbage, så den kan bruges på hjemmesiden.
   return $list;
 }
-function cooking_add_recipe_menu_item($items, $args) {
 
-  $gated_locations = array('headerMenuLocation', 'footerMenuLocation');
-
-  if (!in_array($args->theme_location, $gated_locations)) {
-    return $items;
-  }
-
-  if (!cooking_user_can_manage_recipes()) {
-    return $items;
-  }
-
-  $items .= '<li class="menu-item"><a href="' . esc_url(home_url('/create-recipe/')) . '">Create &amp; edit recipes</a></li>';
-
-  return $items;
-}
-add_filter('wp_nav_menu_items', 'cooking_add_recipe_menu_item', 10, 2);
+?>

@@ -1,36 +1,38 @@
 <?php
-
 get_header(); ?>
 
-<!-- Page banner -->
+<!-- Sidens banner -->
 <section class="page-banner">
   <div class="container">
     <p class="label">Utensils</p>
     <h1 class="page-banner__title">Utensils</h1>
-    <p class="page-banner__text">Knives, spatulas and other kitchen utensils we recommend. Every card links straight to where you can buy it.</p>
+    <p class="page-banner__text">Knives, spatulas and other kitchen utensils we recommend.</p>
   </div>
 </section>
 
-
-<!-- Utensil grid -->
+<!-- Sektionen vises som grid -->
 <section class="section">
   <div class="container">
 
-    <?php if (have_posts()) { ?>
+    <?php 
+    // Tjek om der er oprettet nogle redskaber i WordPress
+    if (have_posts()) { ?>
 
       <div class="equipment-grid">
         <?php
           while (have_posts()) {
             the_post();
+            
             get_template_part('template-parts/equipment-card');
           }
         ?>
       </div>
 
+      <!-- Sidetal i bunden -->
       <div class="pagination">
         <?php
           echo paginate_links(array(
-            'prev_text' => '&larr; Previous',
+            'prev_text' => '&larr; Previous', 
             'next_text' => 'Next &rarr;'
           ));
         ?>
@@ -38,6 +40,7 @@ get_header(); ?>
 
     <?php } else { ?>
 
+      <!-- Hvis der ikke er tilføjet nogen redskaber -->
       <p class="archive-empty">No utensils have been added yet. Check back soon!</p>
 
     <?php } ?>
@@ -45,4 +48,6 @@ get_header(); ?>
   </div>
 </section>
 
-<?php get_footer(); ?>
+<?php 
+get_footer(); 
+?>

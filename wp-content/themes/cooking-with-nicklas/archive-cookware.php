@@ -1,32 +1,34 @@
 <?php
-
 get_header(); ?>
 
-<!-- Page banner -->
+<!-- Sidens banner -->
 <section class="page-banner">
   <div class="container">
     <p class="label">Cookware</p>
     <h1 class="page-banner__title">Cookware</h1>
-    <p class="page-banner__text">Pots, pans and other cookware we recommend. Every card links straight to where you can buy it.</p>
+    <p class="page-banner__text">Pots, pans and other cookware we recommend.</p>
   </div>
 </section>
 
-
-<!-- Cookware grid -->
+<!-- Sektionen vises som grid -->
 <section class="section">
   <div class="container">
 
-    <?php if (have_posts()) { ?>
+    <?php 
+    // Tjek om der er oprettet noget udstyr i WordPress
+    if (have_posts()) { ?>
 
       <div class="equipment-grid">
         <?php
           while (have_posts()) {
-            the_post();
+            the_post(); 
+            
             get_template_part('template-parts/equipment-card');
           }
         ?>
       </div>
 
+      <!-- Sidetal i bunden -->
       <div class="pagination">
         <?php
           echo paginate_links(array(
@@ -37,7 +39,8 @@ get_header(); ?>
       </div>
 
     <?php } else { ?>
-
+      
+      <!-- Hvis der ikke er oprettet noget udstyr -->
       <p class="archive-empty">No cookware has been added yet. Check back soon!</p>
 
     <?php } ?>
@@ -45,4 +48,6 @@ get_header(); ?>
   </div>
 </section>
 
-<?php get_footer(); ?>
+<?php 
+get_footer(); 
+?>

@@ -1,0 +1,8 @@
+.htaccess
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/ai1wm-backups/
+*.wpress
+*.log
+local-xdebuginfo.php

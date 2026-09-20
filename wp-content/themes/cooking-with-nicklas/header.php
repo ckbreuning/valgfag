@@ -15,9 +15,7 @@
     <nav class="main-nav">
       <?php
         wp_nav_menu(array(
-          'theme_location' => 'headerMenuLocation',
-          'container' => false,
-          'fallback_cb' => false
+          'theme_location' => 'headerMenuLocation'
         ));
       ?>
     </nav>

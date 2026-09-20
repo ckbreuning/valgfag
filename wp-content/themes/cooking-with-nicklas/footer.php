@@ -6,9 +6,7 @@
       <nav class="footer-nav">
         <?php
           wp_nav_menu(array(
-            'theme_location' => 'footerMenuLocation',
-            'container' => false,
-            'fallback_cb' => false
+            'theme_location' => 'footerMenuLocation'
           ));
         ?>
       </nav>
