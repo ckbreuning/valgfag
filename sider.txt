@@ -1,7 +1,0 @@
-1. Forside
-    - footer.php & header.php
-    - Live search
-2. Alle opskrifer (archive side)
-3. Opskrift (post)
-4. Create and edit recipes (page)
-5. Cookwear & utensils (archive m. posts)
